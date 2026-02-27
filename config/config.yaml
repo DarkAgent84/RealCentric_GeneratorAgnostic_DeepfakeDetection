@@ -1,0 +1,132 @@
+# =============================================================================
+#  RealCentric Generator-Agnostic Deepfake Detection
+#  Master Configuration
+#  Cluster base: /data/mpstme-naman/deepfake_detection
+# =============================================================================
+
+project:
+  name: "RealCentric_Deepfake_Detection"
+  version: "1.0"
+  seed: 42
+
+data:
+  image_size: 256
+  image_channels: 3
+  supported_formats: [".jpg", ".jpeg", ".png"]
+  split:
+    train: 0.70
+    val:   0.15
+    test:  0.15
+  max_images_per_class:
+    celebdf:          null
+    faceforensics:    null
+    stable_diffusion: null
+  test_only_datasets: ["stable_diffusion"]
+
+preprocessing:
+  target_size: 256
+  normalize:
+    mean: [0.485, 0.456, 0.406]
+    std:  [0.229, 0.224, 0.225]
+  quality_filter:
+    min_brightness: 15
+    max_brightness: 245
+    min_blur_score: 30
+
+features:
+  statistical:
+    enabled: true
+    components: ["mean", "variance", "entropy", "mahalanobis"]
+    output_dim: 4
+  frequency:
+    enabled: true
+    components: ["spectral_slope", "energy_ratio"]
+    cutoff_fraction: 0.3
+    radial_bins: 64
+    output_dim: 2
+  wavelet:
+    enabled: true
+    wavelet_type: "haar"
+    levels: 3
+    histogram_bins: 16
+    output_dim: 200
+  cnn:
+    enabled: true
+    backbones: ["resnet18", "efficientnet_b0"]
+    pretrained: true
+    freeze_backbone: false
+    output_dim:
+      resnet18: 512
+      efficientnet_b0: 1280
+  # Total fused dim: resnet18 = 4+2+200+512 = 718
+
+supervised:
+  backbone: "resnet18"
+  mlp:
+    hidden_dim: 256
+    dropout: 0.3
+    activation: "relu"
+  training:
+    epochs: 50
+    batch_size: 32
+    learning_rate: 0.0001
+    weight_decay: 0.0001
+    optimizer: "adam"
+    scheduler: "cosine"
+    early_stopping_patience: 10
+  loss: "binary_cross_entropy"
+
+unsupervised:
+  backbone: "resnet18"
+  pca:
+    n_components: 128
+    whiten: true
+  isolation_forest:
+    enabled: true
+    n_estimators: 200
+    contamination: 0.05
+    max_samples: "auto"
+  ensemble_weights: [0.40, 0.30, 0.30]
+  augmented_envelope:
+    enabled: true
+    transforms:
+      - {name: "jpeg",   quality_range: [70, 95]}
+      - {name: "blur",   sigma_range: [0.5, 2.0]}
+      - {name: "resize", scale_range: [0.5, 0.9]}
+      - {name: "noise",  std_range: [5.0, 20.0]}
+
+autoencoder:
+  latent_dim: 256
+  encoder_channels: [32, 64, 64]
+  training:
+    epochs: 30
+    batch_size: 32
+    learning_rate: 0.0001
+    optimizer: "adam"
+  loss: "mse"
+
+robustness:
+  transforms:
+    - {name: "jpeg",   params: {quality: 90}}
+    - {name: "jpeg",   params: {quality: 70}}
+    - {name: "jpeg",   params: {quality: 50}}
+    - {name: "jpeg",   params: {quality: 30}}
+    - {name: "blur",   params: {sigma: 1.0}}
+    - {name: "blur",   params: {sigma: 3.0}}
+    - {name: "blur",   params: {sigma: 5.0}}
+    - {name: "resize", params: {scale: 0.75}}
+    - {name: "resize", params: {scale: 0.50}}
+    - {name: "resize", params: {scale: 0.25}}
+
+benchmark:
+  metrics: ["accuracy", "precision", "recall", "f1", "auc_roc"]
+  threshold_metric: "f1"
+
+logging:
+  level: "INFO"
+  save_logs: true
+
+output:
+  save_checkpoints: true
+  save_best_only: true
+  dashboard_dpi: 150

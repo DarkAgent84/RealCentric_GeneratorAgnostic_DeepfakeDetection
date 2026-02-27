@@ -1,0 +1,63 @@
+# =============================================================================
+#  Cluster Paths — SVKM AI/ML HPC
+#  Username : mpstme-naman
+#  Base     : /data/mpstme-naman/deepfake_detection
+# =============================================================================
+
+cluster:
+  name:            "SVKM_HPC"
+  login_url:       "https://10.126.1.10:4443"
+  gpu_node_ip:     "10.126.1.100"
+  master_node_ip:  "10.126.1.101"
+
+paths:
+  project_root: "/data/mpstme-naman/deepfake_detection"
+
+  # Raw datasets (uploaded by user)
+  datasets:
+    celebdf:          "/data/mpstme-naman/deepfake_detection/data/celebdf_v2"
+    faceforensics:    "/data/mpstme-naman/deepfake_detection/data/faceforensics"
+    stable_diffusion: "/data/mpstme-naman/deepfake_detection/data/stable_diffusion"
+
+  # Preprocessed 256x256 images
+  processed:
+    celebdf:          "/data/mpstme-naman/deepfake_detection/data/processed/celebdf"
+    faceforensics:    "/data/mpstme-naman/deepfake_detection/data/processed/ff"
+    stable_diffusion: "/data/mpstme-naman/deepfake_detection/data/processed/sd"
+
+  splits:
+    real_subdir: "real"
+    fake_subdir: "fake"
+
+  # Extracted 718-dim .npy feature matrices
+  features:     "/data/mpstme-naman/deepfake_detection/data/features"
+
+  # Saved model weights / pipeline state
+  checkpoints:  "/data/mpstme-naman/deepfake_detection/checkpoints"
+
+  results:
+    root:             "/data/mpstme-naman/deepfake_detection/results"
+    celebdf:          "/data/mpstme-naman/deepfake_detection/results/celebdf"
+    faceforensics:    "/data/mpstme-naman/deepfake_detection/results/faceforensics"
+    stable_diffusion: "/data/mpstme-naman/deepfake_detection/results/stable_diffusion"
+    cross_dataset:    "/data/mpstme-naman/deepfake_detection/results/cross_dataset"
+    inference:        "/data/mpstme-naman/deepfake_detection/results/inference"
+
+  logs: "/data/mpstme-naman/deepfake_detection/logs"
+  tmp:  "/tmp/deepfake_jobs"
+
+docker:
+  base_image:   "srv-svkmmastermum:5000/pytorch_pbs"
+  base_tag:     "25.12-py3"
+  custom_image: "deepfake_detection_v1"
+  registry:     "srv-svkmmastermum:5000"
+
+pbs:
+  queue:                 "workq"
+  n_nodes:               1
+  n_processors_per_node: 8
+  n_gpus_per_node:       1
+  memory_mb:             65536
+  memory_per_chunk:      true
+  execution_platform:    "linux"
+  working_directory:     "/data/mpstme-naman/deepfake_detection"

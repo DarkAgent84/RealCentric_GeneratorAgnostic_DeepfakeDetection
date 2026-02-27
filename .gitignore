@@ -1,0 +1,26 @@
+# Python and Compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Datasets and Results (Large files)
+data/
+results/
+models/
+*.pt
+*.pth
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Virtual Environments
+venv/
+env/
+.env
+
+# IDE and OS specific
+.vscode/
+.idea/
+.DS_Store
+*.swp
