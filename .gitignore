@@ -4,12 +4,15 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Datasets and Results (Large files)
+# Datasets, Checkpoints, and Results (Large files)
 data/
 results/
 models/
+checkpoints/
+logs/
 *.pt
 *.pth
+*.pkl
 
 # Jupyter Notebooks checkpoints
 .ipynb_checkpoints/

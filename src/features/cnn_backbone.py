@@ -27,9 +27,17 @@ try:
     import torch.nn as nn
     import torchvision.models as models
     import torchvision.transforms as T
+    
+    try:
+        from transformers import CLIPVisionModel, CLIPImageProcessor
+        TRANSFORMERS_AVAILABLE = True
+    except ImportError:
+        TRANSFORMERS_AVAILABLE = False
+        
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
+    TRANSFORMERS_AVAILABLE = False
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -93,10 +101,30 @@ def _build_backbone(name: str, pretrained: bool,
         # Remove classification head
         backbone.classifier = nn.Identity()
 
+    elif name == "clip_vit_b32":
+        if not TRANSFORMERS_AVAILABLE:
+            raise ImportError(
+                "transformers not installed.\n"
+                "Install with: pip install transformers"
+            )
+        # CLIP ViT-B/32 Vision Encoder — 512-dim output
+        # Used as a wrapper module so it behaves like the torchvision models
+        class CLIPWrapper(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.clip = CLIPVisionModel.from_pretrained("openai/clip-vit-base-patch32")
+                
+            def forward(self, x):
+                # Returns the pooled output (embedding of the [CLS] token)
+                return self.clip(pixel_values=x).pooler_output
+                
+        backbone = CLIPWrapper()
+        output_dim = 768
+
     else:
         raise ValueError(
             f"Unknown backbone: {name}. "
-            "Supported: 'resnet18', 'efficientnet_b0'"
+            "Supported: 'resnet18', 'efficientnet_b0', 'clip_vit_b32'"
         )
 
     if freeze:
@@ -171,7 +199,16 @@ class CNNBackboneExtractor:
 
         # Preprocessing transform
         image_size = cfg["data"]["image_size"] if cfg else 256
-        self._transform = _get_transform(image_size)
+        
+        if self._backbone_name == "clip_vit_b32":
+            if not TRANSFORMERS_AVAILABLE:
+                raise ImportError("transformers not installed.")
+            # CLIP uses its own processor which handles normalization and resizing
+            self._clip_processor = CLIPImageProcessor.from_pretrained("openai/clip-vit-base-patch32")
+            self._transform = None
+        else:
+            self._transform = _get_transform(image_size)
+            self._clip_processor = None
 
     # ── Public interface ──────────────────────────────────────────────
 
@@ -268,11 +305,16 @@ class CNNBackboneExtractor:
         elif img.shape[2] == 4:
             img = img[:, :, :3]
 
-        # OpenCV loads as BGR — convert to RGB for ImageNet normalisation
-        # (ImageNet stats were computed on RGB images)
+        # OpenCV loads as BGR — convert to RGB
         img_rgb = img[:, :, ::-1].copy()   # BGR → RGB
 
-        return self._transform(img_rgb)
+        if self._backbone_name == "clip_vit_b32":
+            # The CLIPImageProcessor handles numpy arrays and returns a dict with 'pixel_values'
+            # The output shape is (1, C, H, W). We squeeze it and return the tensor.
+            clip_inputs = self._clip_processor(images=img_rgb, return_tensors="pt")
+            return clip_inputs["pixel_values"].squeeze(0)
+        else:
+            return self._transform(img_rgb)
 
     # ── Device ────────────────────────────────────────────────────────
 
@@ -371,9 +413,9 @@ class CNNBackboneFactory:
     def get_output_dims(self) -> dict:
         """Return output dimensions for all supported backbones."""
         if not TORCH_AVAILABLE:
-            return {"resnet18": 512, "efficientnet_b0": 1280}
+            return {"resnet18": 512, "efficientnet_b0": 1280, "clip_vit_b32": 768}
         dims = {}
-        for name in ["resnet18", "efficientnet_b0"]:
+        for name in ["resnet18", "efficientnet_b0", "clip_vit_b32"]:
             dims[name] = self.get(name).output_dim
         return dims
 
@@ -390,7 +432,7 @@ class CNNBackboneExtractorFallback:
     Logs a clear warning so the user knows CNN features are absent.
     """
 
-    DIMS = {"resnet18": 512, "efficientnet_b0": 1280}
+    DIMS = {"resnet18": 512, "efficientnet_b0": 1280, "clip_vit_b32": 768}
 
     def __init__(self, backbone: str = "resnet18", **kwargs):
         self._backbone_name = backbone.lower()

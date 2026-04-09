@@ -10,9 +10,9 @@ where:
     g_stat   = [f_stat; d]  ∈ R^4    statistical + Mahalanobis
     f_freq               ∈ R^2    spectral slope + energy ratio
     f_wavelet            ∈ R^200  wavelet sub-band features
-    f_CNN                ∈ R^512  ResNet-18  (or R^1280 EfficientNet)
+    f_CNN                ∈ R^512  CLIP ViT-B/32 (or ResNet-18)
     ─────────────────────────────────────────
-    D = 4 + 2 + 200 + 512  = 718  (ResNet-18)
+    D = 4 + 2 + 200 + 512  = 718  (CLIP / ResNet-18)
     D = 4 + 2 + 200 + 1280 = 1486 (EfficientNet-B0)
 
 Two operating modes:
@@ -34,6 +34,7 @@ from src.features.statistical  import StatisticalFeatureExtractor
 from src.features.frequency    import FrequencyFeatureExtractor
 from src.features.wavelet      import WaveletFeatureExtractor
 from src.features.cnn_backbone import create_cnn_extractor
+from src.features.sd_features  import SDFeatureExtractor
 
 
 class FeatureFusionPipeline:
@@ -69,6 +70,7 @@ class FeatureFusionPipeline:
         self._stat = StatisticalFeatureExtractor()
         self._freq = FrequencyFeatureExtractor(cfg)
         self._wav  = WaveletFeatureExtractor(cfg)
+        self._sd   = SDFeatureExtractor(cfg)
         self._cnn  = create_cnn_extractor(
             backbone=backbone,
             cfg=cfg,
@@ -88,9 +90,10 @@ class FeatureFusionPipeline:
         self._dim_stat  = self._stat.output_dim     # 4
         self._dim_freq  = self._freq.output_dim     # 2
         self._dim_wav   = self._wav.output_dim      # 200
+        self._dim_sd    = self._sd.output_dim       # SD features (e.g. 7)
         self._dim_cnn   = self._cnn.output_dim      # 512 or 1280
         self._total_dim = (self._dim_stat + self._dim_freq
-                           + self._dim_wav  + self._dim_cnn)
+                           + self._dim_wav + self._dim_sd + self._dim_cnn)
 
     # ─────────────────────────────────────────────────────────────────
     #  Fitting
@@ -148,16 +151,17 @@ class FeatureFusionPipeline:
             normalise : apply z-score normalisation if fitted
 
         Returns:
-            z: shape (D,)  where D = 718 (ResNet) or 1486 (EfficientNet)
+            z: shape (D,)  where D = 718 (CLIP/ResNet) or 1486 (EfficientNet)
         """
         # Extract each component
         f_stat = self._stat.extract(img)     # (4,)
         f_freq = self._freq.extract(img)     # (2,)
         f_wav  = self._wav.extract(img)      # (200,)
+        f_sd   = self._sd.extract(img)       # (7,)
         f_cnn  = self._cnn.extract(img)      # (512,) or (1280,)
 
-        # Fuse — concatenate in paper order
-        z = np.concatenate([f_stat, f_freq, f_wav, f_cnn]).astype(np.float32)
+        # Fuse — concatenate in paper order plus SD
+        z = np.concatenate([f_stat, f_freq, f_wav, f_sd, f_cnn]).astype(np.float32)
 
         # NaN/Inf protection
         z = np.nan_to_num(z, nan=0.0, posinf=0.0, neginf=0.0)
@@ -192,13 +196,14 @@ class FeatureFusionPipeline:
         stat_feats = np.array([self._stat.extract(img)  for img in images])
         freq_feats = np.array([self._freq.extract(img)  for img in images])
         wav_feats  = np.array([self._wav.extract(img)   for img in images])
+        sd_feats   = np.array([self._sd.extract(img)    for img in images])
 
         # ── CNN features (batched for GPU efficiency) ─────────────────
         cnn_feats  = self._cnn.extract_batch(images, batch_size=cnn_batch_size)
 
         # ── Fuse ──────────────────────────────────────────────────────
         Z = np.concatenate(
-            [stat_feats, freq_feats, wav_feats, cnn_feats], axis=1
+            [stat_feats, freq_feats, wav_feats, sd_feats, cnn_feats], axis=1
         ).astype(np.float32)
 
         # NaN/Inf protection
@@ -230,6 +235,7 @@ class FeatureFusionPipeline:
             "statistical": self._stat.extract(img),
             "frequency":   self._freq.extract(img),
             "wavelet":     self._wav.extract(img),
+            "sd":          self._sd.extract(img),
             "cnn":         self._cnn.extract(img),
         }
 
@@ -280,6 +286,7 @@ class FeatureFusionPipeline:
         return (self._stat.feature_names
                 + self._freq.feature_names
                 + self._wav.feature_names
+                + self._sd.feature_names
                 + self._cnn.feature_names)
 
     @property
@@ -288,6 +295,7 @@ class FeatureFusionPipeline:
             "statistical": self._dim_stat,
             "frequency":   self._dim_freq,
             "wavelet":     self._dim_wav,
+            "sd":          self._dim_sd,
             "cnn":         self._dim_cnn,
             "total":       self._total_dim,
         }
@@ -307,6 +315,8 @@ class FeatureFusionPipeline:
             f"  [spectral slope s, energy ratio R]",
             f"    Wavelet       :   {self._dim_wav:>4}-dim"
             f"  [energies + moments + ratios + histograms]",
+            f"    SD Features   :   {self._dim_sd:>4}-dim"
+            f"  [prnu moments + spectral rings]",
             f"    CNN           :   {self._dim_cnn:>4}-dim"
             f"  [{self._backbone_name} penultimate layer]",
             "    " + "-" * 38,

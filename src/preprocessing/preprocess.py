@@ -495,7 +495,7 @@ def run_dataset(dataset: str, cfg: dict, paths: dict,
 def main():
     args   = parse_args()
     cfg    = get_config()
-    paths  = get_paths(args.mode)
+    paths  = get_paths()  # always uses cluster paths (/data/mpstme-naman/...)
 
     # Setup logger
     log_dir = Path(paths.get("logs", "./logs"))

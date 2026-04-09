@@ -50,18 +50,22 @@ features:
     levels: 3
     histogram_bins: 16
     output_dim: 200
+  sd:
+    enabled: true
+    output_dim: 7
   cnn:
     enabled: true
-    backbones: ["resnet18", "efficientnet_b0"]
+    backbones: ["clip_vit_b32", "resnet18", "efficientnet_b0"]
     pretrained: true
     freeze_backbone: false
     output_dim:
+      clip_vit_b32: 768
       resnet18: 512
       efficientnet_b0: 1280
-  # Total fused dim: resnet18 = 4+2+200+512 = 718
+  # Total fused dim: clip_vit_b32 = 4+2+200+7+768 = 981
 
 supervised:
-  backbone: "resnet18"
+  backbone: "clip_vit_b32"
   mlp:
     hidden_dim: 256
     dropout: 0.3
@@ -77,7 +81,7 @@ supervised:
   loss: "binary_cross_entropy"
 
 unsupervised:
-  backbone: "resnet18"
+  backbone: "clip_vit_b32"
   pca:
     n_components: 128
     whiten: true
