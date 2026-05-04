@@ -1,0 +1,5 @@
+Feature_Group,Full_AUC,Ablated_AUC,AUC_Drop
+statistical,0.9995,0.9995,0.0
+frequency,0.9995,0.9995,-0.0
+wavelet,0.9995,0.998,0.0015
+cnn,0.9995,0.7546,0.2449

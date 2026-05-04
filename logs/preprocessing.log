@@ -1,0 +1,202 @@
+[2026-03-02 06:23:35] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-02 06:23:35] INFO  preprocess — Started: 2026-03-02 06:23:35
+[2026-03-02 06:23:35] INFO  preprocess — 
+=======================================================
+[2026-03-02 06:23:35] INFO  preprocess —   Starting: celebdf
+[2026-03-02 06:23:35] INFO  preprocess — =======================================================
+[2026-03-02 06:23:35] INFO  preprocess — =======================================================
+[2026-03-02 06:23:35] INFO  preprocess —   CelebDF V2 Preprocessing
+[2026-03-02 06:23:35] INFO  preprocess — =======================================================
+[2026-03-02 06:23:35] INFO  preprocess — 
+  [REAL]
+[2026-03-02 06:23:36] INFO  preprocess —   Processing 50360 images from real/
+[2026-03-02 06:23:36] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/real
+[2026-03-02 06:25:29] INFO  preprocess —     real: 29097/50360 saved (57.8%)  skipped=21263 {'too_blurry': 21263}
+[2026-03-02 06:25:29] INFO  preprocess — 
+  [FAKE]
+[2026-03-02 06:25:30] INFO  preprocess —   Processing 50671 images from fake/
+[2026-03-02 06:25:30] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/fake
+[2026-03-02 06:27:13] INFO  preprocess —     fake: 25036/50671 saved (49.4%)  skipped=25635 {'too_blurry': 25635}
+[2026-03-02 06:27:14] INFO  preprocess — 
+All done: 2026-03-02 06:27:14
+[2026-03-02 06:27:43] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-02 06:27:43] INFO  preprocess — Started: 2026-03-02 06:27:43
+[2026-03-02 06:27:43] INFO  preprocess — 
+=======================================================
+[2026-03-02 06:27:43] INFO  preprocess —   Starting: faceforensics
+[2026-03-02 06:27:43] INFO  preprocess — =======================================================
+[2026-03-02 06:27:43] INFO  preprocess — =======================================================
+[2026-03-02 06:27:43] INFO  preprocess —   FaceForensics++ Preprocessing
+[2026-03-02 06:27:43] INFO  preprocess — =======================================================
+[2026-03-02 06:27:43] INFO  preprocess — 
+  [REAL]
+[2026-03-02 06:27:43] INFO  preprocess —   Processing 31949 images from real/
+[2026-03-02 06:27:43] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/real
+[2026-03-02 06:29:57] INFO  preprocess —     real: 27308/31949 saved (85.5%)  skipped=4641 {'too_blurry': 4641}
+[2026-03-02 06:29:57] INFO  preprocess — 
+  [FAKE] (all manipulation methods merged)
+[2026-03-02 06:29:57] INFO  preprocess —   Methods found: Deepfakes, Face2Face, FaceShifter, FaceSwap, NeuralTextures
+[2026-03-02 06:29:59] INFO  preprocess —   Processing 159601 images from fake/
+[2026-03-02 06:29:59] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/fake
+[2026-03-02 06:40:55] INFO  preprocess —     fake: 131743/159601 saved (82.5%)  skipped=27858 {'too_blurry': 27858}
+[2026-03-02 06:40:56] INFO  preprocess — 
+All done: 2026-03-02 06:40:56
+[2026-03-02 06:41:24] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-02 06:41:24] INFO  preprocess — Started: 2026-03-02 06:41:24
+[2026-03-02 06:41:24] INFO  preprocess — 
+=======================================================
+[2026-03-02 06:41:24] INFO  preprocess —   Starting: stable_diffusion
+[2026-03-02 06:41:24] INFO  preprocess — =======================================================
+[2026-03-02 06:41:24] INFO  preprocess — =======================================================
+[2026-03-02 06:41:24] INFO  preprocess —   Stable Diffusion Preprocessing  [FAKE ONLY]
+[2026-03-02 06:41:24] INFO  preprocess —   (Test-only dataset — no real images)
+[2026-03-02 06:41:24] INFO  preprocess — =======================================================
+[2026-03-02 06:41:24] INFO  preprocess — 
+  Subfolders found: ['1024', '512', '768']
+[2026-03-02 06:41:24] INFO  preprocess —   1024/  → 3000 images
+[2026-03-02 06:41:24] INFO  preprocess —   512/  → 3000 images
+[2026-03-02 06:41:24] INFO  preprocess —   768/  → 3000 images
+[2026-03-02 06:41:24] INFO  preprocess — 
+  Total: 9000 images → /data/mpstme-naman/deepfake_detection/data/processed/sd/fake
+[2026-03-02 06:44:02] INFO  preprocess —     fake: 9000/9000 saved (100.0%)  skipped=0 {}
+[2026-03-02 06:44:02] INFO  preprocess — 
+All done: 2026-03-02 06:44:02
+[2026-03-05 05:19:23] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-05 05:19:23] INFO  preprocess — Started: 2026-03-05 05:19:23
+[2026-03-05 05:19:23] INFO  preprocess — 
+=======================================================
+[2026-03-05 05:19:23] INFO  preprocess —   Starting: celebdf
+[2026-03-05 05:19:23] INFO  preprocess — =======================================================
+[2026-03-05 05:19:23] INFO  preprocess — =======================================================
+[2026-03-05 05:19:23] INFO  preprocess —   CelebDF V2 Preprocessing
+[2026-03-05 05:19:23] INFO  preprocess — =======================================================
+[2026-03-05 05:19:23] INFO  preprocess — 
+  [REAL]
+[2026-03-05 05:19:24] INFO  preprocess —   Processing 50360 images from real/
+[2026-03-05 05:19:24] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/real
+[2026-03-05 05:21:19] INFO  preprocess —     real: 29097/50360 saved (57.8%)  skipped=21263 {'too_blurry': 21263}
+[2026-03-05 05:21:20] INFO  preprocess — 
+  [FAKE]
+[2026-03-05 05:21:21] INFO  preprocess —   Processing 50671 images from fake/
+[2026-03-05 05:21:21] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/fake
+[2026-03-05 05:23:05] INFO  preprocess —     fake: 25036/50671 saved (49.4%)  skipped=25635 {'too_blurry': 25635}
+[2026-03-05 05:23:05] INFO  preprocess — 
+All done: 2026-03-05 05:23:05
+[2026-03-05 05:23:05] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-05 05:23:05] INFO  preprocess — Started: 2026-03-05 05:23:05
+[2026-03-05 05:23:05] INFO  preprocess — 
+=======================================================
+[2026-03-05 05:23:05] INFO  preprocess —   Starting: faceforensics
+[2026-03-05 05:23:05] INFO  preprocess — =======================================================
+[2026-03-05 05:23:05] INFO  preprocess — =======================================================
+[2026-03-05 05:23:05] INFO  preprocess —   FaceForensics++ Preprocessing
+[2026-03-05 05:23:05] INFO  preprocess — =======================================================
+[2026-03-05 05:23:05] INFO  preprocess — 
+  [REAL]
+[2026-03-05 05:23:06] INFO  preprocess —   Processing 31949 images from real/
+[2026-03-05 05:23:06] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/real
+[2026-03-05 05:25:25] INFO  preprocess —     real: 27308/31949 saved (85.5%)  skipped=4641 {'too_blurry': 4641}
+[2026-03-05 05:25:25] INFO  preprocess — 
+  [FAKE] (all manipulation methods merged)
+[2026-03-05 05:25:25] INFO  preprocess —   Methods found: Deepfakes, Face2Face, FaceShifter, FaceSwap, NeuralTextures
+[2026-03-05 05:25:27] INFO  preprocess —   Processing 159601 images from fake/
+[2026-03-05 05:25:27] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/fake
+[2026-03-05 05:36:19] INFO  preprocess —     fake: 131743/159601 saved (82.5%)  skipped=27858 {'too_blurry': 27858}
+[2026-03-05 05:36:19] INFO  preprocess — 
+All done: 2026-03-05 05:36:19
+[2026-03-05 05:36:19] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-05 05:36:19] INFO  preprocess — Started: 2026-03-05 05:36:19
+[2026-03-05 05:36:19] INFO  preprocess — 
+=======================================================
+[2026-03-05 05:36:19] INFO  preprocess —   Starting: stable_diffusion
+[2026-03-05 05:36:19] INFO  preprocess — =======================================================
+[2026-03-05 05:36:19] INFO  preprocess — =======================================================
+[2026-03-05 05:36:19] INFO  preprocess —   Stable Diffusion Preprocessing  [FAKE ONLY]
+[2026-03-05 05:36:19] INFO  preprocess —   (Test-only dataset — no real images)
+[2026-03-05 05:36:19] INFO  preprocess — =======================================================
+[2026-03-05 05:36:19] INFO  preprocess — 
+  Subfolders found: ['1024', '512', '768']
+[2026-03-05 05:36:19] INFO  preprocess —   1024/  → 3000 images
+[2026-03-05 05:36:19] INFO  preprocess —   512/  → 3000 images
+[2026-03-05 05:36:19] INFO  preprocess —   768/  → 3000 images
+[2026-03-05 05:36:19] INFO  preprocess — 
+  Total: 9000 images → /data/mpstme-naman/deepfake_detection/data/processed/sd/fake
+[2026-03-05 05:39:34] INFO  preprocess —     fake: 9000/9000 saved (100.0%)  skipped=0 {}
+[2026-03-05 05:39:34] INFO  preprocess — 
+All done: 2026-03-05 05:39:34
+[2026-03-09 05:49:27] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-09 05:49:27] INFO  preprocess — Started: 2026-03-09 05:49:27
+[2026-03-09 05:49:27] INFO  preprocess — 
+=======================================================
+[2026-03-09 05:49:27] INFO  preprocess —   Starting: celebdf
+[2026-03-09 05:49:27] INFO  preprocess — =======================================================
+[2026-03-09 05:49:27] INFO  preprocess — =======================================================
+[2026-03-09 05:49:27] INFO  preprocess —   CelebDF V2 Preprocessing
+[2026-03-09 05:49:27] INFO  preprocess — =======================================================
+[2026-03-09 05:49:27] INFO  preprocess — 
+  [REAL]
+[2026-03-09 05:49:28] INFO  preprocess —   Processing 50360 images from real/
+[2026-03-09 05:49:28] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/real
+[2026-03-09 05:50:58] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-09 05:50:58] INFO  preprocess — Started: 2026-03-09 05:50:58
+[2026-03-09 05:50:58] INFO  preprocess — 
+=======================================================
+[2026-03-09 05:50:58] INFO  preprocess —   Starting: celebdf
+[2026-03-09 05:50:58] INFO  preprocess — =======================================================
+[2026-03-09 05:50:58] INFO  preprocess — =======================================================
+[2026-03-09 05:50:58] INFO  preprocess —   CelebDF V2 Preprocessing
+[2026-03-09 05:50:58] INFO  preprocess — =======================================================
+[2026-03-09 05:50:58] INFO  preprocess — 
+  [REAL]
+[2026-03-09 05:50:59] INFO  preprocess —   Processing 50360 images from real/
+[2026-03-09 05:50:59] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/real
+[2026-03-09 05:53:38] INFO  preprocess —     real: 29097/50360 saved (57.8%)  skipped=21263 {'too_blurry': 21263}
+[2026-03-09 05:53:38] INFO  preprocess — 
+  [FAKE]
+[2026-03-09 05:53:40] INFO  preprocess —   Processing 50671 images from fake/
+[2026-03-09 05:53:40] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/celebdf/fake
+[2026-03-09 05:56:07] INFO  preprocess —     fake: 25036/50671 saved (49.4%)  skipped=25635 {'too_blurry': 25635}
+[2026-03-09 05:56:07] INFO  preprocess — 
+All done: 2026-03-09 05:56:07
+[2026-03-09 05:56:08] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-09 05:56:08] INFO  preprocess — Started: 2026-03-09 05:56:08
+[2026-03-09 05:56:08] INFO  preprocess — 
+=======================================================
+[2026-03-09 05:56:08] INFO  preprocess —   Starting: faceforensics
+[2026-03-09 05:56:08] INFO  preprocess — =======================================================
+[2026-03-09 05:56:08] INFO  preprocess — =======================================================
+[2026-03-09 05:56:08] INFO  preprocess —   FaceForensics++ Preprocessing
+[2026-03-09 05:56:08] INFO  preprocess — =======================================================
+[2026-03-09 05:56:08] INFO  preprocess — 
+  [REAL]
+[2026-03-09 05:56:09] INFO  preprocess —   Processing 31949 images from real/
+[2026-03-09 05:56:09] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/real
+[2026-03-09 05:59:25] INFO  preprocess —     real: 27308/31949 saved (85.5%)  skipped=4641 {'too_blurry': 4641}
+[2026-03-09 05:59:25] INFO  preprocess — 
+  [FAKE] (all manipulation methods merged)
+[2026-03-09 05:59:25] INFO  preprocess —   Methods found: Deepfakes, Face2Face, FaceShifter, FaceSwap, NeuralTextures
+[2026-03-09 05:59:28] INFO  preprocess —   Processing 159601 images from fake/
+[2026-03-09 05:59:28] INFO  preprocess —   Output → /data/mpstme-naman/deepfake_detection/data/processed/ff/fake
+[2026-03-09 06:15:24] INFO  preprocess —     fake: 131743/159601 saved (82.5%)  skipped=27858 {'too_blurry': 27858}
+[2026-03-09 06:15:24] INFO  preprocess — 
+All done: 2026-03-09 06:15:24
+[2026-03-09 06:15:24] INFO  preprocess — RealCentric Deepfake Detection — Preprocessing Pipeline
+[2026-03-09 06:15:24] INFO  preprocess — Started: 2026-03-09 06:15:24
+[2026-03-09 06:15:24] INFO  preprocess — 
+=======================================================
+[2026-03-09 06:15:24] INFO  preprocess —   Starting: stable_diffusion
+[2026-03-09 06:15:24] INFO  preprocess — =======================================================
+[2026-03-09 06:15:24] INFO  preprocess — =======================================================
+[2026-03-09 06:15:24] INFO  preprocess —   Stable Diffusion Preprocessing  [FAKE ONLY]
+[2026-03-09 06:15:24] INFO  preprocess —   (Test-only dataset — no real images)
+[2026-03-09 06:15:24] INFO  preprocess — =======================================================
+[2026-03-09 06:15:24] INFO  preprocess — 
+  Subfolders found: ['1024', '512', '768']
+[2026-03-09 06:15:25] INFO  preprocess —   1024/  → 3000 images
+[2026-03-09 06:15:25] INFO  preprocess —   512/  → 3000 images
+[2026-03-09 06:15:25] INFO  preprocess —   768/  → 3000 images
+[2026-03-09 06:15:25] INFO  preprocess — 
+  Total: 9000 images → /data/mpstme-naman/deepfake_detection/data/processed/sd/fake
+[2026-03-09 06:19:45] INFO  preprocess —     fake: 9000/9000 saved (100.0%)  skipped=0 {}
+[2026-03-09 06:19:45] INFO  preprocess — 
+All done: 2026-03-09 06:19:45
